@@ -1,6 +1,9 @@
 WTForms
 =======
 
+jb2170's copy, which I'm rewriting to have a propery hierarchy
+of fuzziness and fix some bugs. Main dev branch is `dev <https://github.com/jb2170/wtforms-v4/tree/dev>`_
+
 WTForms is a flexible forms validation and rendering library for Python
 web development. It can work with whatever web framework and template
 engine you choose. It supports data validation, CSRF protection,
