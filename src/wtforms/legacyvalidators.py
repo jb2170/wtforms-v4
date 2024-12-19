@@ -10,8 +10,6 @@ __all__ = (
     "equal_to",
     "IPAddress",
     "ip_address",
-    "Length",
-    "length",
     "NumberRange",
     "number_range",
     "Optional",
@@ -95,76 +93,6 @@ class EqualTo:
             message = field.gettext("Field must be equal to %(other_name)s.")
 
         raise ValidationError(message % d)
-
-
-class Length:
-    """
-    Validates the length of a string.
-
-    :param min:
-        The minimum required length of the string. If not provided, minimum
-        length will not be checked.
-    :param max:
-        The maximum length of the string. If not provided, maximum length
-        will not be checked.
-    :param message:
-        Error message to raise in case of a validation error. Can be
-        interpolated using `%(min)d` and `%(max)d` if desired. Useful defaults
-        are provided depending on the existence of min and max.
-
-    When supported, sets the `minlength` and `maxlength` attributes on widgets.
-    """
-
-    def __init__(self, min=-1, max=-1, message=None):
-        assert (
-            min != -1 or max != -1
-        ), "At least one of `min` or `max` must be specified."
-        assert max == -1 or min <= max, "`min` cannot be more than `max`."
-        self.min = min
-        self.max = max
-        self.message = message
-        self.field_flags = {}
-        if self.min != -1:
-            self.field_flags["minlength"] = self.min
-        if self.max != -1:
-            self.field_flags["maxlength"] = self.max
-
-    def __call__(self, form, field):
-        if field.data is None:
-            length = -1
-        else:
-            length = len(field.data)
-
-        if length >= self.min and (self.max == -1 or length <= self.max):
-            return
-
-        if self.message is not None:
-            message = self.message
-
-        elif self.max == -1:
-            message = field.ngettext(
-                "Field must be at least %(min)d character long.",
-                "Field must be at least %(min)d characters long.",
-                self.min,
-            )
-        elif self.min == -1:
-            message = field.ngettext(
-                "Field cannot be longer than %(max)d character.",
-                "Field cannot be longer than %(max)d characters.",
-                self.max,
-            )
-        elif self.min == self.max:
-            message = field.ngettext(
-                "Field must be exactly %(max)d character long.",
-                "Field must be exactly %(max)d characters long.",
-                self.max,
-            )
-        else:
-            message = field.gettext(
-                "Field must be between %(min)d and %(max)d characters long."
-            )
-
-        raise ValidationError(message % dict(min=self.min, max=self.max, length=length))
 
 
 class NumberRange:
@@ -649,7 +577,6 @@ email = Email
 equal_to = EqualTo
 ip_address = IPAddress
 mac_address = MacAddress
-length = Length
 number_range = NumberRange
 optional = Optional
 regexp = Regexp
