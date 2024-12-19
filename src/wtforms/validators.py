@@ -80,3 +80,43 @@ class InputRequired(FieldRequired):
         if not field.raw_data[0]:
             field.errors.clear() # XXX is this because other errors don't matter compared to this? if so also put this on FieldRequired
             self._stop_validation(field.gettext("This field is required."))
+
+class DataRequired(InputRequired):
+    """
+    XXX NMD
+    XXX Only StringField is implemented so far
+    XXX DataRequired has a muddy history, truthy checking datatypes
+
+    Checks the field's data is 'truthy' otherwise stops the validation chain.
+
+    This validator checks that the ``data`` attribute on the field is a 'true'
+    value (effectively, it does ``if field.data``.) Furthermore, if the data
+    is a string type, a string containing only whitespace characters is
+    considered false.
+
+    If the data is empty, also removes prior errors (such as processing errors)
+    from the field.
+
+    **NOTE** this validator used to be called `Required` but the way it behaved
+    (requiring coerced data, not input data) meant it functioned in a way
+    which was not symmetric to the `Optional` validator and furthermore caused
+    confusion with certain fields which coerced data to 'falsey' values like
+    ``0``, ``Decimal(0)``, ``time(0)`` etc. Unless a very specific reason
+    exists, we recommend using the :class:`InputRequired` instead.
+
+    :param message:
+        Error message to raise in case of a validation error.
+
+    Sets the `required` attribute on widgets.
+    """
+
+    def __call__(self, form, field):
+        super().__call__(form, field)
+        if not isinstance(field.raw_data[0], str):
+            raise NotImplementedError
+            # if not field.data:
+            #     self._stop_validation("Bruh moment")
+        else:
+            if not field.raw_data[0].strip():
+                field.errors.clear() # XXX see InputRequired
+                self._stop_validation(field.gettext("This field is required to be more than just whitespace."))
