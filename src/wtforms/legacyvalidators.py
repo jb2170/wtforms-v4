@@ -12,8 +12,6 @@ __all__ = (
     "equal_to",
     "IPAddress",
     "ip_address",
-    "InputRequired",
-    "input_required",
     "Length",
     "length",
     "NumberRange",
@@ -291,36 +289,6 @@ class DataRequired:
 
     def __call__(self, form, field):
         if field.data and (not isinstance(field.data, str) or field.data.strip()):
-            return
-
-        if self.message is None:
-            message = field.gettext("This field is required.")
-        else:
-            message = self.message
-
-        field.errors[:] = []
-        raise StopValidation(message)
-
-
-class InputRequired:
-    """
-    Validates that input was provided for this field.
-
-    Note there is a distinction between this and DataRequired in that
-    InputRequired looks that form-input data was provided, and DataRequired
-    looks at the post-coercion data. This means that this validator only checks
-    whether non-empty data was sent, not whether non-empty data was coerced
-    from that data. Initially populated data is not considered sent.
-
-    Sets the `required` attribute on widgets.
-    """
-
-    def __init__(self, message=None):
-        self.message = message
-        self.field_flags = {"required": True}
-
-    def __call__(self, form, field):
-        if field.raw_data and field.raw_data[0]:
             return
 
         if self.message is None:
@@ -728,7 +696,6 @@ mac_address = MacAddress
 length = Length
 number_range = NumberRange
 optional = Optional
-input_required = InputRequired
 data_required = DataRequired
 regexp = Regexp
 url = URL
