@@ -3,6 +3,8 @@ from .legacyvalidators import *
 from typing import Optional as TOptional
 # once `Optional` validator has been dissolved this can be renamed TOptional -> Optional
 
+from wtforms import Form, Field
+
 # XXX NMD: Not My Docstring: Needs reviewing
 # XXX DRD: Data or Raw Data, how much non-StringField do we need to consider
 
@@ -23,7 +25,7 @@ class Validator:
     #     # instead of field_flags?
     #     pass
 
-    def __call__(self, form, field):
+    def __call__(self, form: Form, field: Field):
         """
         The heart of the validator
 
