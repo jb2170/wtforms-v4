@@ -12,8 +12,6 @@ __all__ = (
     "ip_address",
     "NumberRange",
     "number_range",
-    "Optional",
-    "optional",
     "Regexp",
     "regexp",
     "URL",
@@ -150,38 +148,6 @@ class NumberRange:
             message = field.gettext("Number must be between %(min)s and %(max)s.")
 
         raise ValidationError(message % dict(min=self.min, max=self.max))
-
-
-class Optional:
-    """
-    Allows empty input and stops the validation chain from continuing.
-
-    If input is empty, also removes prior errors (such as processing errors)
-    from the field.
-
-    :param strip_whitespace:
-        If True (the default) also stop the validation chain on input which
-        consists of only whitespace.
-
-    Sets the `optional` attribute on widgets.
-    """
-
-    def __init__(self, strip_whitespace=True):
-        if strip_whitespace:
-            self.string_check = lambda s: s.strip()
-        else:
-            self.string_check = lambda s: s
-
-        self.field_flags = {"optional": True}
-
-    def __call__(self, form, field):
-        if (
-            not field.raw_data
-            or isinstance(field.raw_data[0], str)
-            and not self.string_check(field.raw_data[0])
-        ):
-            field.errors[:] = []
-            raise StopValidation()
 
 
 class Regexp:
@@ -578,7 +544,6 @@ equal_to = EqualTo
 ip_address = IPAddress
 mac_address = MacAddress
 number_range = NumberRange
-optional = Optional
 regexp = Regexp
 url = URL
 any_of = AnyOf

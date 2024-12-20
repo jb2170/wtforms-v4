@@ -126,6 +126,55 @@ class DataRequired(FieldRequired):
             field.errors.clear() # XXX see InputRequired
             self._stop_validation(field.gettext("This field is required to be more than just whitespace."))
 
+class FieldOptional(Validator):
+    """
+    Allows missing field; stops further validation if the field does not exist in the form data.
+
+    Removes prior errors (such as processing errors) in that case.
+
+    Sets the `optional` attribute on widgets.
+    """
+
+    field_flags = {"optional": True}
+
+    def __init__(self):
+        super().__init__(error_message = None)
+
+    def __call__(self, form: Form, field: Field):
+        super().__call__(form, field)
+        if not field.raw_data:
+            field.errors.clear()
+            self._stop_validation()
+
+class InputOptional(FieldOptional):
+    """
+    Extends `FieldOptional`'s behavior; also stops further validation if
+    the field's form data is the empty string.
+    """
+
+    def __call__(self, form: Form, field: Field):
+        super().__call__(form, field)
+        if not field.raw_data[0]:
+            field.errors.clear()
+            self._stop_validation()
+
+class DataOptional(FieldOptional):
+    # inherit FieldOptional to skip checking raw_data[0] twice
+    # XXX only implemented for string data so far
+
+    """
+    Extends `InputOptional`'s behavior; also stops further validation if
+    the field's form data is just whitespace.
+    """
+
+    def __call__(self, form: Form, field: Field):
+        super().__call__(form, field)
+        if not isinstance(field.data, str):
+            raise NotImplementedError
+        if not field.raw_data[0].strip():
+            field.errors.clear()
+            self._stop_validation()
+
 class Length(Validator):
     """
     Validates the length of a string.
