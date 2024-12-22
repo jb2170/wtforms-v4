@@ -3,7 +3,8 @@ from .legacyvalidators import *
 from typing import Optional as TOptional
 # once `Optional` validator has been dissolved this can be renamed TOptional -> Optional
 
-from wtforms import Form, Field
+from wtforms.form import Form
+from wtforms.fields import Field
 
 # XXX NMD: Not My Docstring: Needs reviewing
 # XXX DRD: Data or Raw Data, how much non-StringField do we need to consider
