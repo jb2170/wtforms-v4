@@ -24,7 +24,6 @@ __all__ = (
     "mac_address",
     "UUID",
     "ValidationError",
-    "StopValidation",
     "readonly",
     "ReadOnly",
     "disabled",
@@ -39,19 +38,6 @@ class ValidationError(ValueError):
 
     def __init__(self, message="", *args, **kwargs):
         ValueError.__init__(self, message, *args, **kwargs)
-
-
-class StopValidation(Exception):
-    """
-    Causes the validation chain to stop.
-
-    If StopValidation is raised, no more validators in the validation chain are
-    called. If raised with a message, the message will be added to the errors
-    list.
-    """
-
-    def __init__(self, message="", *args, **kwargs):
-        Exception.__init__(self, message, *args, **kwargs)
 
 
 class EqualTo:
