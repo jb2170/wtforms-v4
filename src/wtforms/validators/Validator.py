@@ -49,6 +49,6 @@ class StopValidation(Exception):
     list.
     """
 
-    # XXX message should be None instead of "" right?
-    def __init__(self, message="", *args, **kwargs):
-        Exception.__init__(self, message, *args, **kwargs)
+    # XXX message should be None instead of "" right? TODO change this "" to None, and core.py Field.validate method to check for None
+    def __init__(self, message: Optional[str] = "", *args, **kwargs):
+        super().__init__(message, *args, **kwargs)
